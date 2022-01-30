@@ -1,0 +1,9 @@
+---
+neovim_dependencies:
+  - nodejs
+  - npm
+  - bat
+  - fzf
+  - clangd
+  - fuse
+  - libfuse

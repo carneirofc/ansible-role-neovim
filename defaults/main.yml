@@ -1,1 +1,30 @@
 ---
+neovim_dependencies:
+neovim_pip_executable:
+neovim_python_dependencies:
+  # Neovim
+  - neovim
+
+  # Markdown
+  - mdformat
+  - mdformat-gfm
+
+  # Python nvim LSP
+  - python-lsp-server
+  - pyls-flake8
+  - pylsp-mypy
+  - pyls-isort
+  - python-lsp-black
+  - pylsp-rope
+  - rope
+
+  # python dev
+  - black
+  - mypy
+  - flake8
+  - pre-commit
+
+  # Ansible
+  - ansible
+  - ansible-lint
+  - ansible-format
