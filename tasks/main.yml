@@ -10,11 +10,6 @@
       paths:
         - '{{ role_path }}/vars'
 
-#  "ansible_os_family": "Archlinux",
-#  "ansible_os_family": "Debian",
-#  "ansible_os_family": "RedHat",
-
-
 - name: Download from GitHub
   get_url:
     dest: /usr/local/bin/nvim
@@ -26,23 +21,9 @@
 
 - name: Install dependencies
   include_tasks:
-    name: "setup-{{ ansible_os_family }}"
-
-- name: Neovim apt dependencies for plugins
-  apt:
-    pkg:
-      - nodejs
-      - npm
-      - bat
-      - fzf
-      - clangd
-      - fuse
-      - libfuse
-  when: ansible_os_family == 'Debian'
-  become: true
+    file: "setup-{{ ansible_os_family }}"
 
 - name: Neovim Python dependencies
   pip:
-    state: latest
-    # executable: "{{ nvim_pip_executable }}"
-    name:
+    state: present
+    name: "{{ neovim_python_dependencies }}"
