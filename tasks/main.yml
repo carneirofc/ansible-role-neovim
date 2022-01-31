@@ -27,3 +27,9 @@
   pip:
     state: present
     name: "{{ neovim_python_dependencies }}"
+
+- name: Neovim node dependencies
+  npm:
+    name: ansible-language-server
+    global: yes
+    state: present
