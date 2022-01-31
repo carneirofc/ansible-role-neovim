@@ -10,7 +10,8 @@ pip install \
     ansible-core==2.12.1 \
     ansible-lint==5.3.2 \
     molecule==3.5.2 \
-    molecule-docker==1.1.0
+    molecule-docker==1.1.0 \
+    yamllint==1.26.3
 ```
 
 ## Example Playbook

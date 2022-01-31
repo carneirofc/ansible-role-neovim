@@ -1,6 +1,9 @@
 ---
+neovim_url: https://github.com/neovim/neovim/releases/download/v0.6.1/nvim.appimage
+neovim_checksum: sha256:ef9056e05ef6a4c1d0cdb8b21f79261703122c0fd31f23f782158d326fdadbf5
+neovim_pip_executable: pip3
+
 neovim_dependencies:
-neovim_pip_executable:
 neovim_python_dependencies:
   # Neovim
   - neovim

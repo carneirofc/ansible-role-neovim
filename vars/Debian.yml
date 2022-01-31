@@ -6,4 +6,3 @@ neovim_dependencies:
   - fzf
   - clangd
   - fuse
-  - libfuse

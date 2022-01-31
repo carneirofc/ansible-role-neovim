@@ -14,18 +14,19 @@
   get_url:
     dest: /usr/local/bin/nvim
     force: yes
-    url: "{{ nvim_url }}"
-    checksum: "{{ nvim_checksum }}"
+    url: "{{ neovim_url }}"
+    checksum: "{{ neovim_checksum }}"
     mode: u=rx,g=rx,o=rx
   become: true
 
 - name: Install dependencies
   include_tasks:
-    file: "setup-{{ ansible_os_family }}"
+    file: "setup-{{ ansible_os_family }}.yml"
 
 - name: Neovim Python dependencies
   pip:
     state: present
+    executable: "{{ neovim_python_executable }}"
     name: "{{ neovim_python_dependencies }}"
 
 - name: Neovim node dependencies
