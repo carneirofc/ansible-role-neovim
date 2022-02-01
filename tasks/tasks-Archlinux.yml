@@ -1,6 +1,5 @@
----
-- name: Neovim apt dependencies for plugins
-  apt:
+- name: Neovim pacman dependencies for plugins
+  pacman:
     name: "{{ neovim_dependencies }}"
     state: present
     update_cache: yes

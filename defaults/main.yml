@@ -1,12 +1,27 @@
 ---
 neovim_url: https://github.com/neovim/neovim/releases/download/v0.6.1/nvim.appimage
 neovim_checksum: sha256:ef9056e05ef6a4c1d0cdb8b21f79261703122c0fd31f23f782158d326fdadbf5
+
 neovim_pip_executable: pip3
+
+neovim_config_file: "{{ ansible_user_dir }}/.config/nvim/init.vim"
+
+neovim_python_executable: '/usr/bin/python'
+neovim_python3_executable: '/usr/bin/python3'
+
+neovim_python_support: 0
+neovim_python3_support: 1
+
+#let g:python_host_prog  = '/usr/bin/python'
+#let g:loaded_python_provider = 0
+
+#let g:python3_host_prog  = '/usr/bin/python3'
+#let g:loaded_python3_provider = 1
 
 neovim_dependencies:
 neovim_python_dependencies:
   # Neovim
-  - neovim
+  - pynvim
 
   # Markdown
   - mdformat
@@ -30,4 +45,4 @@ neovim_python_dependencies:
   # Ansible
   - ansible
   - ansible-lint
-  - ansible-format
+# - ansible-format

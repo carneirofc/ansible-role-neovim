@@ -1,0 +1,18 @@
+- name: Neovim apt dependencies for plugins
+  apt:
+    name: "{{ neovim_dependencies }}"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Update package facts
+  package_facts:
+    manager: auto
+
+- name: Download and install .deb package
+  include_tasks: 
+    file: deb-download-install.yml
+  when: "package.name not in ansible_facts.packages"
+  loop: "{{ neovim_deb_packages }}"
+  loop_control:
+    loop_var: package

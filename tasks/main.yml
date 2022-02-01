@@ -10,27 +10,87 @@
       paths:
         - '{{ role_path }}/vars'
 
-- name: Download from GitHub
-  get_url:
-    dest: /usr/local/bin/nvim
-    force: yes
-    url: "{{ neovim_url }}"
-    checksum: "{{ neovim_checksum }}"
-    mode: u=rx,g=rx,o=rx
-  become: true
+- name: Install Neovim
+  block:
 
-- name: Install dependencies
-  include_tasks:
-    file: "setup-{{ ansible_os_family }}.yml"
+  - name: Download from GitHub
+    get_url:
+      dest: /usr/local/bin/nvim
+      force: yes
+      url: "{{ neovim_url }}"
+      checksum: "{{ neovim_checksum }}"
+      mode: u=rx,g=rx,o=rx
+    become: true
 
-- name: Neovim Python dependencies
-  pip:
-    state: present
-    executable: "{{ neovim_python_executable }}"
-    name: "{{ neovim_python_dependencies }}"
+- name: Install Neovim plugins
+  block:
 
-- name: Neovim node dependencies
-  npm:
-    name: ansible-language-server
-    global: yes
-    state: present
+  - name: Package manager dependencies
+    include_tasks: '{{ item }}'
+    with_first_found:
+      - files:
+          - 'tasks-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+          - 'tasks-{{ ansible_distribution }}.yml'
+          - 'tasks-{{ ansible_os_family }}.yml'
+        ignore_errors: true
+        paths:
+          - '{{ role_path }}/tasks'
+
+  - name: Python dependencies
+    pip:
+      state: present
+      executable: "{{ neovim_pip_executable | default(omit) }}"
+      name: "{{ neovim_python_dependencies }}"
+
+  - name: NodeJS dependencies
+    npm:
+      name: ansible-language-server
+      global: yes
+      state: present
+    become: true
+
+- name: Neovim Python Support
+  block:
+    - name: Python executable status
+      stat:
+        path: "{{ neovim_python_executable }}"
+      register: _neovim_python_executable_stat
+
+    - name: Disable python support if executable does not exists
+      set_fact:
+        neovim_python_support: "0"
+      when: "not _neovim_python_executable_stat.stat.exists"
+
+    - name: Comment out python executable if it is not valid
+      lineinfile:
+        path: "{{ neovim_config_file }}"
+        search_string: 'g:python_host_prog'
+        line: "\" let g:python_host_prog = '{{ neovim_python_executable | default('') }}'"
+        state: present
+      when: "not _neovim_python_executable_stat.stat.exists"
+
+    - name: Configure python support
+      lineinfile:
+        path: "{{ neovim_config_file }}"
+        regexp: '^"?\s*let g:loaded_python_provider\s.*=.*$'
+        line: 'let g:loaded_python_provider = {{ neovim_python_support }}'
+      when: "_neovim_python_executable_stat.stat.exists"
+
+    - name: Update python executable path executable exists
+      lineinfile:
+        path: "{{ neovim_config_file }}"
+        regexp: '^let g:python_host_prog\s.*=.*$'
+        line: "let g:python_host_prog = '{{ neovim_python_executable }}'"
+      when: "_neovim_python_executable_stat.stat.exists"
+
+#   - name: Python3 support
+#     lineinfile:
+#       path: "{{ neovim_config_file }}"
+#       regexp: '^let g:loaded_python3_provider\s.*=.*$'
+#       line: 'let g:loaded_python3_provider = {{ neovim_python3_support }}'
+
+#   - name: Python3 executable
+#     lineinfile:
+#       path: "{{ neovim_config_file }}"
+#       regexp: '^let g:python3_host_prog\s.*=.*$'
+#       line: "let g:python3_host_prog = '{{ neovim_python3_executable }}'"
