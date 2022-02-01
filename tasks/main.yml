@@ -22,7 +22,7 @@
       mode: u=rx,g=rx,o=rx
     become: true
 
-- name: Install Neovim plugins
+- name: Plugins dependencies
   block:
 
   - name: Package manager dependencies
@@ -49,48 +49,13 @@
       state: present
     become: true
 
-- name: Neovim Python Support
-  block:
-    - name: Python executable status
-      stat:
-        path: "{{ neovim_python_executable }}"
-      register: _neovim_python_executable_stat
+- name: Config python support
+  include_tasks: config-python.yml
+  with_items:
+    - python_executable: "{{ neovim_python_executable }}"
+      python_support: "{{ neovim_python_support }}"
+      py: python
 
-    - name: Disable python support if executable does not exists
-      set_fact:
-        neovim_python_support: "0"
-      when: "not _neovim_python_executable_stat.stat.exists"
-
-    - name: Comment out python executable if it is not valid
-      lineinfile:
-        path: "{{ neovim_config_file }}"
-        search_string: 'g:python_host_prog'
-        line: "\" let g:python_host_prog = '{{ neovim_python_executable | default('') }}'"
-        state: present
-      when: "not _neovim_python_executable_stat.stat.exists"
-
-    - name: Configure python support
-      lineinfile:
-        path: "{{ neovim_config_file }}"
-        regexp: '^"?\s*let g:loaded_python_provider\s.*=.*$'
-        line: 'let g:loaded_python_provider = {{ neovim_python_support }}'
-      when: "_neovim_python_executable_stat.stat.exists"
-
-    - name: Update python executable path executable exists
-      lineinfile:
-        path: "{{ neovim_config_file }}"
-        regexp: '^let g:python_host_prog\s.*=.*$'
-        line: "let g:python_host_prog = '{{ neovim_python_executable }}'"
-      when: "_neovim_python_executable_stat.stat.exists"
-
-#   - name: Python3 support
-#     lineinfile:
-#       path: "{{ neovim_config_file }}"
-#       regexp: '^let g:loaded_python3_provider\s.*=.*$'
-#       line: 'let g:loaded_python3_provider = {{ neovim_python3_support }}'
-
-#   - name: Python3 executable
-#     lineinfile:
-#       path: "{{ neovim_config_file }}"
-#       regexp: '^let g:python3_host_prog\s.*=.*$'
-#       line: "let g:python3_host_prog = '{{ neovim_python3_executable }}'"
+    - python_executable: "{{ neovim_python3_executable }}"
+      python_support: "{{ neovim_python3_support }}"
+      py: python3

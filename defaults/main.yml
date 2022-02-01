@@ -6,19 +6,16 @@ neovim_pip_executable: pip3
 
 neovim_config_file: "{{ ansible_user_dir }}/.config/nvim/init.vim"
 
-neovim_python_executable: '/usr/bin/python'
+neovim_python_executable: '/usr/bin/python2'
+neovim_python_support: true
+
 neovim_python3_executable: '/usr/bin/python3'
+neovim_python3_support: true
 
-neovim_python_support: 0
-neovim_python3_support: 1
+# Package manager dependencies
+neovim_dependencies: []
 
-#let g:python_host_prog  = '/usr/bin/python'
-#let g:loaded_python_provider = 0
-
-#let g:python3_host_prog  = '/usr/bin/python3'
-#let g:loaded_python3_provider = 1
-
-neovim_dependencies:
+# pip dependencies
 neovim_python_dependencies:
   # Neovim
   - pynvim
