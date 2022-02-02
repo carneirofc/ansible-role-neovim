@@ -57,11 +57,11 @@
       git:
         dest: "{{ ansible_user_dir > 0 | ternary(ansible_user_dir , '~/') }}/dotfiles"
         force: no
-        notify: Update dotfiles owners
         recursive: yes
         repo: "{{ neovim_dotfiles['repo'] }}"
         update: yes
         version: "{{ 'version' in neovim_dotfiles | ternary(neovim_dotfiles['version'], omit) }}"
+      notify: Update dotfiles owners
 
     - name: Create config dir
       file:
