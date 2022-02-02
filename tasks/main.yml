@@ -55,13 +55,14 @@
   block:
     - name: Clone dotfiles
       git:
-        dest: "{{ ansible_user_dir > 0 | ternary(ansible_user_dir , '~/') }}/dotfiles"
+        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles"
         force: no
         recursive: yes
         repo: "{{ neovim_dotfiles['repo'] }}"
         update: yes
         version: "{{ 'version' in neovim_dotfiles | ternary(neovim_dotfiles['version'], omit) }}"
       notify: Update dotfiles owners
+      ignore_errors: true # temporary fix, we should register the output and define failure accordingly https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#defining-failure
 
     - name: Create config dir
       file:
@@ -74,7 +75,7 @@
     - name: symlink neovim config
       file:
         state: link
-        src: "{{ ansible_user_dir > 0 | ternary(ansible_user_dir , '~/') }}/dotfiles/{{ neovim_dotfiles['path'] | default('') }}"
+        src: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles/{{ neovim_dotfiles['path'] | default('') }}"
         dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
         user: "{{ ansible_user_uid | default(omit) }}"
         group: "{{ ansible_user_gid | default(omit) }}"

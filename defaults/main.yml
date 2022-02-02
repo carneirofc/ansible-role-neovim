@@ -20,7 +20,7 @@ neovim_python3_support: true
 # Repository containing the neovim config files
 # eg: dotfiles/nvim
 neovim_dotfiles:
-  repo: https://github.com/carneirofc/dotfiles
+  repo: https://github.com/carneirofc/dotfiles.git
   path: nvim
   version: master
 
