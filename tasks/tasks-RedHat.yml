@@ -1,0 +1,7 @@
+---
+- name: Neovim yum dependencies for plugins
+  yum:
+    name: "{{ neovim_dependencies }}"
+    state: present
+    update_cache: yes
+  become: true

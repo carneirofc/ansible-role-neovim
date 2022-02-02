@@ -12,7 +12,6 @@
 
 - name: Install Neovim
   block:
-
   - name: Download from GitHub
     get_url:
       dest: /usr/local/bin/nvim
@@ -22,9 +21,10 @@
       mode: u=rx,g=rx,o=rx
     become: true
 
+  when: "neovim_enable_install_neovim"
+
 - name: Plugins dependencies
   block:
-
   - name: Package manager dependencies
     include_tasks: '{{ item }}'
     with_first_found:
@@ -49,6 +49,38 @@
       state: present
     become: true
 
+  when: "neovim_enable_install_dependencies"
+
+- name: Install neovim dotfiles
+  block:
+    - name: Clone dotfiles
+      git:
+        dest: "{{ ansible_user_dir > 0 | ternary(ansible_user_dir , '~/') }}/dotfiles"
+        force: no
+        notify: Update dotfiles owners
+        recursive: yes
+        repo: "{{ neovim_dotfiles[repo] }}"
+        update: yes
+        version: "{{ 'version' in neovim_dotfiles | ternary(neovim_dotfiles['version'], omit) }}"
+
+    - name: Create config dir
+      file:
+        state: directory
+        path: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
+        user: "{{ ansible_user_uid | default(omit) }}"
+        group: "{{ ansible_user_gid | default(omit) }}"
+        recursive: yes
+
+    - name: symlink neovim config
+      file:
+        state: link
+        src: "{{ ansible_user_dir > 0 | ternary(ansible_user_dir , '~/') }}/dotfiles/{{ neovim_dotfiles['path'] | default('') }}"
+        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
+        user: "{{ ansible_user_uid | default(omit) }}"
+        group: "{{ ansible_user_gid | default(omit) }}"
+
+  when: "neovim_enable_install_dotfiles"
+
 - name: Config python support
   include_tasks: config-python.yml
   with_items:
@@ -59,3 +91,5 @@
     - python_executable: "{{ neovim_python3_executable }}"
       python_support: "{{ neovim_python3_support }}"
       py: python3
+
+  when: "neovim_enable_config"

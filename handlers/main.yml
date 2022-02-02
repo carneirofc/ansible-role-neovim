@@ -1,1 +1,8 @@
 ---
+- name: Update dotfiles owners
+  file:
+    state: directory
+    dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles"
+    user: "{{ ansible_user_uid | default(omit) }}"
+    group: "{{ ansible_user_gid | default(omit) }}"
+    recursive: yes
