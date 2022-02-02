@@ -68,16 +68,15 @@
       file:
         state: directory
         path: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
-        user: "{{ ansible_user_uid | default(omit) }}"
+        owner: "{{ ansible_user_uid | default(omit) }}"
         group: "{{ ansible_user_gid | default(omit) }}"
-        recursive: yes
 
     - name: symlink neovim config
       file:
         state: link
         src: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles/{{ neovim_dotfiles['path'] | default('') }}"
-        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
-        user: "{{ ansible_user_uid | default(omit) }}"
+        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config/nvim"
+        owner: "{{ ansible_user_uid | default(omit) }}"
         group: "{{ ansible_user_gid | default(omit) }}"
 
   when: "neovim_enable_install_dotfiles"
