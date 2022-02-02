@@ -59,7 +59,7 @@
         force: no
         notify: Update dotfiles owners
         recursive: yes
-        repo: "{{ neovim_dotfiles[repo] }}"
+        repo: "{{ neovim_dotfiles['repo'] }}"
         update: yes
         version: "{{ 'version' in neovim_dotfiles | ternary(neovim_dotfiles['version'], omit) }}"
 
