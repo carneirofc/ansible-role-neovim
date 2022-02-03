@@ -1,2 +1,9 @@
-# yum dependencies
-neovim_dependencies: []
+---
+__neovim_dependencies:
+  - gcc
+  - gcc-c++
+  - make
+  - ripgrep
+
+__neovim_repos:
+  - https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo

@@ -4,6 +4,10 @@ neovim_checksum: sha256:ef9056e05ef6a4c1d0cdb8b21f79261703122c0fd31f23f782158d32
 
 neovim_enable_config: true
 neovim_enable_install_dependencies: true
+neovim_enable_install_dependencies_python: true
+neovim_enable_install_dependencies_node: true
+neovim_enable_install_dependencies_package_manager: true
+
 neovim_enable_install_dotfiles: true
 neovim_enable_install_neovim: true
 
@@ -27,6 +31,11 @@ neovim_dotfiles:
 # Package manager dependencies
 neovim_dependencies: []
 
+# npm global packages
+neovim_node_dependencies:
+  - neovim
+  - ansible-language-server
+
 # pip dependencies
 neovim_python_dependencies:
   # Neovim
@@ -43,7 +52,7 @@ neovim_python_dependencies:
   - pyls-isort
   - python-lsp-black
   - pylsp-rope
-  - rope
+  - rope>=0.22.0
 
   # python dev
   - black

@@ -1,14 +1,30 @@
 ---
-- name: Resolve platform specific vars
-  include_vars: '{{ item }}'
-  with_first_found:
-    - files:
-        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
-        - '{{ ansible_distribution }}.yml'
-        - '{{ ansible_os_family }}.yml'
-      ignore_errors: true
-      paths:
-        - '{{ role_path }}/vars'
+- name: Include and set defaults for platform specific variables
+  block:
+  - name: Resolve platform specific vars
+    include_vars: '{{ item }}'
+    # TODO: Consider replacing 'with_first_found' with a simple loop
+    # https://docs.ansible.com/ansible/latest/plugins/lookup.html
+    with_first_found:
+      - files:
+          - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+          - '{{ ansible_distribution }}.yml'
+          - '{{ ansible_os_family }}.yml'
+        ignore_errors: true
+        paths:
+          - '{{ role_path }}/vars'
+          - '{{ role_path }}/defaults'
+
+  - set_fact:
+      neovim_dependencies: "{{ __neovim_dependencies | default ([]) }}"
+    when: __neovim_dependencies is not defined
+
+  - set_fact:
+      neovim_deb_packages: "{{ __neovim_deb_package | default ([]) }}"
+    when: __neovim_deb_package is not defined
+
+  - set_fact:
+      neovim_repos: "{{ __neovim_repos | default([]) }}"
 
 - name: Install Neovim
   block:
@@ -35,19 +51,24 @@
         ignore_errors: true
         paths:
           - '{{ role_path }}/tasks'
+    when: "neovim_enable_install_dependencies_package_manager"
 
   - name: Python dependencies
     pip:
       state: present
       executable: "{{ neovim_pip_executable | default(omit) }}"
       name: "{{ neovim_python_dependencies }}"
+      extra_args: --user
+    when: "neovim_enable_install_dependencies_python"
 
   - name: NodeJS dependencies
     npm:
-      name: ansible-language-server
+      name: "{{ item }}"
       global: yes
       state: present
     become: true
+    with_items: "{{ neovim_node_dependencies }}"
+    when: "neovim_enable_install_dependencies_node"
 
   when: "neovim_enable_install_dependencies"
 

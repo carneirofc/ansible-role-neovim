@@ -1,13 +1,16 @@
 ---
-neovim_dependencies:
-  - nodejs
-  - npm
+__neovim_dependencies:
   - bat
-  - fzf
   - clangd
   - fuse
+  - fzf
+  - g++
+  - gcc
+  - make
+  - nodejs
+  - npm
 
-neovim_deb_packages:
+__neovim_deb_packages:
   - name: ripgrep
     url: https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
     file: ripgrep_13.0.0_amd64.deb
