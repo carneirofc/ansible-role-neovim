@@ -60,7 +60,7 @@ neovim_python_dependencies:
   - flake8
   - pre-commit
 
-  # Ansible
-  - ansible
-  - ansible-lint
+# # Ansible
+# - ansible
+# - ansible-lint
 # - ansible-format
