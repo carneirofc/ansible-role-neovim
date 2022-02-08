@@ -1,5 +1,5 @@
 ## Description
-:ASDASD
+
 Install Neovim and plugins
 
 ## Requirements
