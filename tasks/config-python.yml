@@ -1,0 +1,32 @@
+- name: Python executable status
+  stat:
+    path: "{{ item.python_executable }}"
+  register: _exec
+
+- name: Should enable python support?
+  set_fact:
+    _neovim_python_support: "{{ _exec.stat.exists and item.python_support }}"
+
+- name: Executable path
+  block:
+    - name: Comment out python executable if it is not valid
+      lineinfile:
+        path: "{{ neovim_config_file }}"
+        search_string: 'g:{{ item.py }}_host_prog'
+        line: "\" let g:{{ item.py }}_host_prog = '{{ item.python_executable | default('') }}'"
+        state: present
+      when: "not _exec.stat.exists"
+
+    - name: Update python executable path executable exists
+      lineinfile:
+        path: "{{ neovim_config_file }}"
+        search_string: 'g:{{ item.py }}_host_prog'
+        line: "let g:{{ item.py }}_host_prog = '{{ item.python_executable }}'"
+      when: "_exec.stat.exists"
+
+# - name: Configure python support
+#   lineinfile:
+#     path: "{{ neovim_config_file }}"
+#     search_string: 'g:loaded_{{ item.py }}_provider'
+#     line: "let g:loaded_{{ item.py }}_provider = {{ _neovim_python_support | ternary(1, 0) }}"
+

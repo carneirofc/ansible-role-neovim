@@ -1,9 +1,14 @@
 ---
-neovim_dependencies:
-  - nodejs  # node
-  - npm     # node package manager
+__neovim_dependencies:
   - bat     # Cat clone with syntax highligh and git integration
-  - fzf     # Command-line fuzzy finder
   - clang   # Clang and utilities such as clangd
   - fuse3   # Filesystem in user space
-  - ripgrep # Search tool, grep replacement https://github.com/BurntSushi/ripgrep
+  - fzf     # Command-line fuzzy finder
+  - g++
+  - gcc
+  - make
+  - nodejs  # node
+  - npm     # node package manager
+  - python
+  - python-pip
+  - ripgrep # Search tool, grep replacement https://github.com/BurntSushi/ripgre

@@ -8,6 +8,7 @@
 - name: Update package facts
   package_facts:
     manager: auto
+  become: true
 
 - name: Download and install .deb package
   include_tasks: 
@@ -16,3 +17,4 @@
   loop: "{{ neovim_deb_packages }}"
   loop_control:
     loop_var: package
+  become: true
