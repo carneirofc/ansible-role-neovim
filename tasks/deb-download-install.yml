@@ -1,7 +1,7 @@
 - name: Download deb package
   get_url: 
-    url="{{ package.url }}"
-    dest="/tmp/{{ package.file }}"
+    url: "{{ package.url }}"
+    dest: "/tmp/{{ package.file }}"
 
 - name: Install deb dependencies
   apt:

@@ -1,3 +1,9 @@
+- name: Install Python
+  raw: pacman -Qq python 2>/dev/null && echo "python already installed" || (yes | pacman -Sy python python-pip python-setuptools)
+  register: __neovim_arch_py_install
+  failed_when: "__neovim_arch_py_install.rc != 0"
+  changed_when: '"python already installed" not in __neovim_arch_py_install.stdout'
+
 - name: Neovim pacman dependencies for plugins
   pacman:
     name: "{{ neovim_dependencies }}"

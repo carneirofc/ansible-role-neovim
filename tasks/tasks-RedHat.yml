@@ -5,7 +5,7 @@
     dest: "/etc/yum.repos.d/{{ item.split('/')[-1] }}"
   become: true
   with_items: "{{ neovim_repos }}"
-  when: "{{ item.startswith('http') and item.endswith('.repo') }}"
+  when: "item.startswith('http') and item.endswith('.repo')"
 
 - name: Neovim yum dependencies for plugins
   yum:

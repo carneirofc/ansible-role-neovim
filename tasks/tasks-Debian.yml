@@ -17,4 +17,3 @@
   loop: "{{ neovim_deb_packages }}"
   loop_control:
     loop_var: package
-  become: true

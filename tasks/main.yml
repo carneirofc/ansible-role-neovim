@@ -10,10 +10,12 @@
           - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
           - '{{ ansible_distribution }}.yml'
           - '{{ ansible_os_family }}.yml'
-        ignore_errors: true
         paths:
           - '{{ role_path }}/vars'
           - '{{ role_path }}/defaults'
+
+  - name: Get facts
+    setup:
 
   - set_fact:
       neovim_dependencies: "{{ __neovim_dependencies | default ([]) }}"
@@ -48,7 +50,6 @@
           - 'tasks-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
           - 'tasks-{{ ansible_distribution }}.yml'
           - 'tasks-{{ ansible_os_family }}.yml'
-        ignore_errors: true
         paths:
           - '{{ role_path }}/tasks'
     when: "neovim_enable_install_dependencies_package_manager"

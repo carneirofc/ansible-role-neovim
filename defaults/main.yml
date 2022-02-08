@@ -11,7 +11,7 @@ neovim_enable_install_dependencies_package_manager: true
 neovim_enable_install_dotfiles: true
 neovim_enable_install_neovim: true
 
-neovim_pip_executable: pip3
+neovim_pip_executable: /usr/bin/pip3
 
 neovim_config_file: "{{ ansible_user_dir }}/.config/nvim/init.vim"
 
