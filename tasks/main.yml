@@ -17,16 +17,20 @@
   - name: Get facts
     setup:
 
-  - set_fact:
+  - name: "Set neovim_dependencies default value"
+    set_fact:
       neovim_dependencies: "{{ __neovim_dependencies | default ([]) }}"
-    when: __neovim_dependencies is not defined
+    when: "neovim_dependencies is not defined"
 
-  - set_fact:
+  - name: "Set neovim_deb_packages default value"
+    set_fact:
       neovim_deb_packages: "{{ __neovim_deb_package | default ([]) }}"
-    when: __neovim_deb_package is not defined
+    when: "neovim_deb_package is not defined"
 
-  - set_fact:
+  - name: "Set neovim_repos default value"
+    set_fact:
       neovim_repos: "{{ __neovim_repos | default([]) }}"
+    when: "neovim_repos is not defined"
 
 - name: Install Neovim
   block:
