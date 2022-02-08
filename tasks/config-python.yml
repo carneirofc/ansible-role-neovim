@@ -23,10 +23,3 @@
         search_string: 'g:{{ item.py }}_host_prog'
         line: "let g:{{ item.py }}_host_prog = '{{ item.python_executable }}'"
       when: "_exec.stat.exists"
-
-# - name: Configure python support
-#   lineinfile:
-#     path: "{{ neovim_config_file }}"
-#     search_string: 'g:loaded_{{ item.py }}_provider'
-#     line: "let g:loaded_{{ item.py }}_provider = {{ _neovim_python_support | ternary(1, 0) }}"
-
