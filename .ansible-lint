@@ -1,7 +1,9 @@
 ---
 skip_list:
   - '602'
+  - ignore-errors
   - no-handler
+  - risky-file-permissions
   - role-name
   - unnamed-task
 

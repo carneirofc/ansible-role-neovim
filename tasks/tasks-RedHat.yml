@@ -1,0 +1,15 @@
+---
+- name: Neovim download yum repo
+  get_url:
+    url: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item.split('/')[-1] }}"
+  become: true
+  with_items: "{{ neovim_repos }}"
+  when: "item.startswith('http') and item.endswith('.repo')"
+
+- name: Neovim yum dependencies for plugins
+  yum:
+    name: "{{ neovim_dependencies }}"
+    state: present
+    update_cache: yes
+  become: true

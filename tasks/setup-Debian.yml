@@ -1,7 +1,0 @@
----
-- name: Neovim apt dependencies for plugins
-  apt:
-    name: "{{ neovim_dependencies }}"
-    state: present
-    update_cache: yes
-  become: true

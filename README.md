@@ -4,10 +4,18 @@ Install Neovim and plugins
 
 ## Requirements
 
+In order to use this playbook the user should have the following packages:
+
 ```command
 pip install \
     ansible==5.2.0 \
-    ansible-core==2.12.1 \
+    ansible-core==2.12.1
+```
+
+These packages are required for development:
+
+```command
+pip install \
     ansible-lint==5.3.2 \
     molecule==3.5.2 \
     molecule-docker==1.1.0 \
@@ -35,7 +43,13 @@ ansible-playbook -i host, -u user -k --ask-become-pass playbook.yml
 Python dependencies
 
 ```bash
-pip install -r molecule/default/requirements.txt
+# Install general requirements
+[ -f requirements.txt ] && pip3 install -r requirements.txt
+[ -f requirements.yml ] && ansible-galaxy install -r requirements.yml
+
+# Install molecule requirements
+[ -f molecule/default/requirements.txt ] && pip3 install -r molecule/default/requirements.txt
+[ -f molecule/default/requirements.yml ] && ansible-galaxy install -r molecule/default/requirements.yml
 ```
 
 Tests are performed using Molecule. It is recommended to use conda or a virtualenv.

@@ -1,36 +1,121 @@
 ---
-- name: Resolve platform specific vars
-  include_vars: '{{ item }}'
-  with_first_found:
-    - files:
-        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
-        - '{{ ansible_distribution }}.yml'
-        - '{{ ansible_os_family }}.yml'
-      ignore_errors: true
-      paths:
-        - '{{ role_path }}/vars'
+- name: Include and set defaults for platform specific variables
+  block:
+  - name: Resolve platform specific vars
+    include_vars: '{{ item }}'
+    # TODO: Consider replacing 'with_first_found' with a simple loop
+    # https://docs.ansible.com/ansible/latest/plugins/lookup.html
+    with_first_found:
+      - files:
+          - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+          - '{{ ansible_distribution }}.yml'
+          - '{{ ansible_os_family }}.yml'
+        paths:
+          - '{{ role_path }}/vars'
+          - '{{ role_path }}/defaults'
 
-- name: Download from GitHub
-  get_url:
-    dest: /usr/local/bin/nvim
-    force: yes
-    url: "{{ neovim_url }}"
-    checksum: "{{ neovim_checksum }}"
-    mode: u=rx,g=rx,o=rx
-  become: true
+  - name: Get facts
+    setup:
 
-- name: Install dependencies
-  include_tasks:
-    file: "setup-{{ ansible_os_family }}.yml"
+  - name: "Set neovim_dependencies default value"
+    set_fact:
+      neovim_dependencies: "{{ __neovim_dependencies | default ([]) }}"
+    when: "neovim_dependencies is not defined"
 
-- name: Neovim Python dependencies
-  pip:
-    state: present
-    executable: "{{ neovim_python_executable }}"
-    name: "{{ neovim_python_dependencies }}"
+  - name: "Set neovim_deb_packages default value"
+    set_fact:
+      neovim_deb_packages: "{{ __neovim_deb_package | default ([]) }}"
+    when: "neovim_deb_package is not defined"
 
-- name: Neovim node dependencies
-  npm:
-    name: ansible-language-server
-    global: yes
-    state: present
+  - name: "Set neovim_repos default value"
+    set_fact:
+      neovim_repos: "{{ __neovim_repos | default([]) }}"
+    when: "neovim_repos is not defined"
+
+- name: Install Neovim
+  block:
+  - name: Download from GitHub
+    get_url:
+      dest: /usr/local/bin/nvim
+      force: yes
+      url: "{{ neovim_url }}"
+      checksum: "{{ neovim_checksum }}"
+      mode: u=rx,g=rx,o=rx
+    become: true
+
+  when: "neovim_enable_install_neovim"
+
+- name: Plugins dependencies
+  block:
+  - name: Package manager dependencies
+    include_tasks: '{{ item }}'
+    with_first_found:
+      - files:
+          - 'tasks-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+          - 'tasks-{{ ansible_distribution }}.yml'
+          - 'tasks-{{ ansible_os_family }}.yml'
+        paths:
+          - '{{ role_path }}/tasks'
+    when: "neovim_enable_install_dependencies_package_manager"
+
+  - name: Python dependencies
+    pip:
+      state: present
+      executable: "{{ neovim_pip_executable | default(omit) }}"
+      name: "{{ neovim_python_dependencies }}"
+      extra_args: --user
+    when: "neovim_enable_install_dependencies_python"
+
+  - name: NodeJS dependencies
+    npm:
+      name: "{{ item }}"
+      global: yes
+      state: present
+    become: true
+    with_items: "{{ neovim_node_dependencies }}"
+    when: "neovim_enable_install_dependencies_node"
+
+  when: "neovim_enable_install_dependencies"
+
+- name: Install neovim dotfiles
+  block:
+    - name: Clone dotfiles
+      git:
+        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles"
+        force: no
+        recursive: yes
+        repo: "{{ neovim_dotfiles['repo'] }}"
+        update: yes
+        version: "{{ 'version' in neovim_dotfiles | ternary(neovim_dotfiles['version'], omit) }}"
+      notify: Update dotfiles owners
+      ignore_errors: true # temporary fix, we should register the output and define failure accordingly https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#defining-failure
+
+    - name: Create config dir
+      file:
+        state: directory
+        path: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config"
+        owner: "{{ ansible_user_uid | default(omit) }}"
+        group: "{{ ansible_user_gid | default(omit) }}"
+
+    - name: symlink neovim config
+      file:
+        state: link
+        src: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/dotfiles/{{ neovim_dotfiles['path'] | default('') }}"
+        dest: "{{ (ansible_user_dir | length > 0) | ternary(ansible_user_dir , '~/') }}/.config/nvim"
+        owner: "{{ ansible_user_uid | default(omit) }}"
+        group: "{{ ansible_user_gid | default(omit) }}"
+
+  when: "neovim_enable_install_dotfiles"
+
+- name: Config python support
+  include_tasks: config-python.yml
+  with_items:
+    - python_executable: "{{ neovim_python_executable }}"
+      python_support: "{{ neovim_python_support }}"
+      py: python
+
+    - python_executable: "{{ neovim_python3_executable }}"
+      python_support: "{{ neovim_python3_support }}"
+      py: python3
+
+  when: "neovim_enable_config"

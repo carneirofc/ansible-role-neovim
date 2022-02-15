@@ -1,12 +1,45 @@
 ---
 neovim_url: https://github.com/neovim/neovim/releases/download/v0.6.1/nvim.appimage
 neovim_checksum: sha256:ef9056e05ef6a4c1d0cdb8b21f79261703122c0fd31f23f782158d326fdadbf5
-neovim_pip_executable: pip3
 
-neovim_dependencies:
+neovim_enable_config: true
+neovim_enable_install_dependencies: true
+neovim_enable_install_dependencies_python: true
+neovim_enable_install_dependencies_node: true
+neovim_enable_install_dependencies_package_manager: true
+
+neovim_enable_install_dotfiles: true
+neovim_enable_install_neovim: true
+
+neovim_pip_executable: /usr/bin/pip3
+
+neovim_config_file: "{{ ansible_user_dir }}/.config/nvim/init.vim"
+
+neovim_python_executable: '/usr/bin/python2'
+neovim_python_support: true
+
+neovim_python3_executable: '/usr/bin/python3'
+neovim_python3_support: true
+
+# Repository containing the neovim config files
+# eg: dotfiles/nvim
+neovim_dotfiles:
+  repo: https://github.com/carneirofc/dotfiles.git
+  path: nvim
+  version: master
+
+# Package manager dependencies
+neovim_dependencies: []
+
+# npm global packages
+neovim_node_dependencies:
+  - neovim
+  - ansible-language-server
+
+# pip dependencies
 neovim_python_dependencies:
   # Neovim
-  - neovim
+  - pynvim
 
   # Markdown
   - mdformat
@@ -19,7 +52,7 @@ neovim_python_dependencies:
   - pyls-isort
   - python-lsp-black
   - pylsp-rope
-  - rope
+  - rope>=0.22.0
 
   # python dev
   - black
@@ -27,7 +60,7 @@ neovim_python_dependencies:
   - flake8
   - pre-commit
 
-  # Ansible
-  - ansible
-  - ansible-lint
-  - ansible-format
+# # Ansible
+# - ansible
+# - ansible-lint
+# - ansible-format

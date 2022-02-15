@@ -1,6 +1,0 @@
----
-- name: Neovim pacman dependencies for plugins
-  pacman:
-    name: "{{ neovim_dependencies }}"
-    state: present
-  become: true
