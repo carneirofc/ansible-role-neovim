@@ -17,6 +17,19 @@
   #       - "../../../../group_vars/{{ ansible_distribution }}.yml"
   #       - "../../../../group_vars/{{ ansible_os_family }}.yml"
   #       - "../../../../group_vars/all"
+    - name: Check Arch Linux
+      stat:
+        path: /etc/arch-release
+      register: __arch_release
+
+    - name: Install Python on arch
+      pacman:
+        state: present
+        name:
+          - python
+          - python-pip
+          - python-setuptools
+      when: __arch_release.exists
 
     - name: Configure apt to use a proxy defined by the variable 'apt_proxy_server'
       template:
