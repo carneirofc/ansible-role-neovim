@@ -24,7 +24,7 @@
 
     - name: Installs python for Debian based distros
       apt:
-        name: python
+        name: python3
         state: present
       become: true
       register: apt_result
@@ -35,12 +35,12 @@
 
     - name: Installs python for RedHat based distros
       package:
-        name: python
+        name: python3
         state: present
       become: true
       register: package_result
       until: package_result is success
-      retries: 5
+      retries: 2
       delay: 2
       when: ansible_os_family == 'RedHat'
 

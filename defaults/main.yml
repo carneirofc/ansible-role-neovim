@@ -2,21 +2,28 @@
 neovim_url: https://github.com/neovim/neovim/releases/download/v0.6.1/nvim.appimage
 neovim_checksum: sha256:ef9056e05ef6a4c1d0cdb8b21f79261703122c0fd31f23f782158d326fdadbf5
 
-neovim_enable_config: true
-neovim_enable_install_dependencies: true
+# Download and install neovim
+neovim_enable_install_neovim: true
+
+# Update config files
+neovim_enable_config: false
+
+# Install Plugins dependencies
+neovim_enable_install_dependencies: false
 neovim_enable_install_dependencies_python: true
 neovim_enable_install_dependencies_node: true
 neovim_enable_install_dependencies_package_manager: true
 
-neovim_enable_install_dotfiles: true
-neovim_enable_install_neovim: true
+# clone and install dotfiles
+neovim_enable_install_dotfiles: false
 
+# python3 pip executable
 neovim_pip_executable: /usr/bin/pip3
 
 neovim_config_file: "{{ ansible_user_dir }}/.config/nvim/init.vim"
 
 neovim_python_executable: '/usr/bin/python2'
-neovim_python_support: true
+neovim_python_support: false
 
 neovim_python3_executable: '/usr/bin/python3'
 neovim_python3_support: true

@@ -1,0 +1,35 @@
+- name: Resolve platform specific vars
+  include_vars: '{{ item }}'
+  # TODO: Consider replacing 'with_first_found' with a simple loop
+  # https://docs.ansible.com/ansible/latest/plugins/lookup.html
+  with_first_found:
+    - files:
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+      paths:
+        - '{{ role_path }}/vars'
+        - '{{ role_path }}/defaults'
+
+- name: Get distribution facts
+  setup:
+    filter:
+      - 'ansible_distribution'
+      - 'ansible_distribution_release'
+      - 'ansible_os_family'
+
+- name: "Set neovim_dependencies default value"
+  set_fact:
+    neovim_dependencies: "{{ __neovim_dependencies | default ([]) }}"
+  when: "neovim_dependencies is not defined"
+
+- name: "Set neovim_deb_packages default value"
+  set_fact:
+    neovim_deb_packages: "{{ __neovim_deb_package | default ([]) }}"
+  when: "neovim_deb_package is not defined"
+
+- name: "Set neovim_repos default value"
+  set_fact:
+    neovim_repos: "{{ __neovim_repos | default([]) }}"
+  when: "neovim_repos is not defined"
+

@@ -1,0 +1,9 @@
+---
+- name: Download from GitHub
+  get_url:
+    dest: /usr/local/bin/nvim
+    force: yes
+    url: "{{ neovim_url }}"
+    checksum: "{{ neovim_checksum }}"
+    mode: u=rx,g=rx,o=rx
+  become: true

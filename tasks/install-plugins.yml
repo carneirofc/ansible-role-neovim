@@ -1,0 +1,27 @@
+- name: Package manager dependencies
+  include_tasks: '{{ item }}'
+  with_first_found:
+    - files:
+        - 'tasks-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - 'tasks-{{ ansible_distribution }}.yml'
+        - 'tasks-{{ ansible_os_family }}.yml'
+      paths:
+        - '{{ role_path }}/tasks'
+  when: neovim_enable_install_dependencies_package_manager
+
+- name: Python dependencies
+  pip:
+    state: present
+    executable: "{{ neovim_pip_executable | default(omit) }}"
+    name: "{{ neovim_python_dependencies }}"
+    extra_args: --user
+  when: neovim_enable_install_dependencies_python
+
+- name: NodeJS dependencies
+  npm:
+    name: "{{ item }}"
+    global: yes
+    state: present
+  become: true
+  with_items: "{{ neovim_node_dependencies }}"
+  when: neovim_enable_install_dependencies_node
