@@ -6,8 +6,7 @@ __neovim_dependencies:
   - bat     # Cat clone with syntax highligh and git integration
   - clang   # Clang and utilities such as clangd
   - fzf     # Command-line fuzzy finder
-  - g++
-  - gcc
+  - gcc     # GNU Compiler Collection
   - make
   - nodejs  # node
   - npm     # node package manager

@@ -10,9 +10,9 @@ neovim_enable_config: false
 
 # Install Plugins dependencies
 neovim_enable_install_dependencies: false
+neovim_enable_install_dependencies_package_manager: true
 neovim_enable_install_dependencies_python: true
 neovim_enable_install_dependencies_node: true
-neovim_enable_install_dependencies_package_manager: true
 
 # clone and install dotfiles
 neovim_enable_install_dotfiles: false
@@ -36,7 +36,7 @@ neovim_dotfiles:
   version: master
 
 # Package manager dependencies
-neovim_dependencies: []
+# __neovim_dependencies: []
 
 # npm global packages
 neovim_node_dependencies:

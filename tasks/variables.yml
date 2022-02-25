@@ -26,7 +26,9 @@
 - name: "Set neovim_deb_packages default value"
   set_fact:
     neovim_deb_packages: "{{ __neovim_deb_package | default ([]) }}"
-  when: "neovim_deb_package is not defined"
+  when:
+    - neovim_deb_package is not defined
+    - ansible_os_family == "Debian"
 
 - name: "Set neovim_repos default value"
   set_fact:

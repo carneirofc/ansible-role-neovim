@@ -9,12 +9,23 @@
         - '{{ role_path }}/tasks'
   when: neovim_enable_install_dependencies_package_manager
 
-- name: Python dependencies
-  pip:
-    state: present
-    executable: "{{ neovim_pip_executable | default(omit) }}"
-    name: "{{ neovim_python_dependencies }}"
-    extra_args: --user
+- name: Python packages
+  block:
+
+  - name: Python setuptools
+    pip:
+      state: latest
+      executable: "{{ neovim_pip_executable | default(omit) }}"
+      name: setuptools
+      extra_args: --user
+
+  - name: Python dependencies
+    pip:
+      state: present
+      executable: "{{ neovim_pip_executable | default(omit) }}"
+      name: "{{ neovim_python_dependencies }}"
+      extra_args: --user
+
   when: neovim_enable_install_dependencies_python
 
 - name: NodeJS dependencies

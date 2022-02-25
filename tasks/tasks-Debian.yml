@@ -9,6 +9,7 @@
   package_facts:
     manager: auto
   become: true
+  no_log: true
 
 - name: Download and install .deb package
   include_tasks: 

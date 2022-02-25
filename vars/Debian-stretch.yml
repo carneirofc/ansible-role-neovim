@@ -3,13 +3,13 @@ __neovim_fuse:
   - fuse
 
 __neovim_dependencies:
-  - clangd
   - fzf
   - g++
   - gcc
   - make
   - nodejs
   - npm
+  - python3-devel
   - python3
   - python3-pip
   - python3-setuptools
