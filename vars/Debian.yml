@@ -1,8 +1,10 @@
 ---
+__neovim_fuse:
+  - fuse
+
 __neovim_dependencies:
   - bat
   - clangd
-  - fuse
   - fzf
   - g++
   - gcc

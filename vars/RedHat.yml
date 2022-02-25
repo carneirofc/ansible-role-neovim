@@ -1,4 +1,7 @@
 ---
+__neovim_fuse:
+  - fuse
+
 __neovim_dependencies:
   - gcc
   - gcc-c++

@@ -7,3 +7,18 @@
     checksum: "{{ neovim_checksum }}"
     mode: u=rx,g=rx,o=rx
   become: true
+
+# We neet to update the cache
+- name: Install fuse package (apt)
+  apt:
+    name: "{{ neovim_fuse }}"
+    state: present
+    update_cache: yes
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install fuse package
+  package:
+    name: "{{ neovim_fuse }}"
+    state: present
+  when: ansible_os_family != "Debian"

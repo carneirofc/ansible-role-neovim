@@ -10,6 +10,11 @@
   include_tasks: install-dependencies.yml
   when: neovim_enable_install_dependencies
 
+- name: Neovim status
+  command: /usr/local/bin/nvim --version
+  register: neovim_cmd
+  changed_when: false
+
 - name: Install Neovim Dotfiles
   include_tasks: install-dotfiles.yml
   when: neovim_enable_install_dotfiles

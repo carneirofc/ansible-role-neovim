@@ -1,8 +1,10 @@
 ---
+__neovim_fuse:
+  - fuse2   # Filesystem in user space
+
 __neovim_dependencies:
   - bat     # Cat clone with syntax highligh and git integration
   - clang   # Clang and utilities such as clangd
-  - fuse3   # Filesystem in user space
   - fzf     # Command-line fuzzy finder
   - g++
   - gcc

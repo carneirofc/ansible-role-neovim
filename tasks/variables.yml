@@ -33,3 +33,7 @@
     neovim_repos: "{{ __neovim_repos | default([]) }}"
   when: "neovim_repos is not defined"
 
+- name: "set neovim fuse package name"
+  set_fact:
+    neovim_fuse: "{{ __neovim_fuse }}"
+  when: neovim_fuse is not defined
