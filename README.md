@@ -94,8 +94,7 @@ servers are set via DHCP with local non-routable IP addresses
 
 ## Troubleshooting
 
-If you use a host system with SELinux enabled you might get an error when using
-Ansible like the following:
+If you use a host system with SELinux enabled you might get an error when using Ansible like the following:
 
 ```bash
     "msg": "Aborting, target uses selinux but python bindings (libselinux-python) aren't installed!"
